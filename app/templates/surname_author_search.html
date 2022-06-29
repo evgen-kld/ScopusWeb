@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Index page
+{% endblock %}
+
+{% block content_title %}
+    <h1 class="text-center my-3">
+        Страница поиска автора по фамилии
+    </h1>
+{% endblock %}
+
+{% block content %}
+    <form method="GET">
+        <div class="mb-3">
+            <input class="form-control" type="text" name="surname" id="surname" value="{{ request.form.get('surname', '') }}">
+        </div>
+        <button type="submit" class="btn btn-primary mb-3">Поиск</button>
+        {% if articles %}
+            <a class="btn btn-primary mb-3" href="{{ url_for('surname_author_search', download_xlsx='True', surname=request.args.get('surname')) }}">Экспорт в Excel</a>
+        {% endif %}
+    </form>
+    {% if articles %}
+        <div class="container">
+            <h3>Найденные авторы: {{ list_author|join(', ') }}</h3>
+            <ol>
+            {% for article in articles %}
+            <div class="row">
+                <div class="my-3">
+                        <li>
+                            Название: {{ article[0] }}<br>
+                            Авторы: {{ article[2]|join(', ') }}<br>
+                            Дата публикации работы: {{ article[3] }}<br>
+                            Источник: {{ article[4] }}<br>
+                            Том: {{ article[5] or '-' }}<br>
+                            Страницы: {{ article[6] or '-' }}
+                        </li> 
+                    </div>
+                </div>
+                {% endfor %}
+            </ol>
+        </div>
+    {% endif %}
+{% endblock %}
